@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>清除本域下的所有指定cookie</title>
+</head>
+<body>
+<div>进度如下:</div>
+<div id="total"></div>
+<script>
+
+    // gulp 执行 getAllPages
+    var allPages = [
+        '/clear-all-cookies/example01/url1',
+        '/clear-all-cookies/example01/url2'
+    ];
+
+    allPages = allPages.map(function(page) {
+        // 需要在Nginx配置一下, location /clearCookieIframe$ {}
+        return  page + '/clearCookieIframe.html';
+    });
+
+    (function(i) {
+        var self = arguments.callee,
+                $total = document.getElementById('total'),
+                $iframe = document.createElement('iframe'),
+                $body = document.getElementsByTagName('body')[0];
+
+        $total.innerText = (i+1) + '/' + allPages.length;
+
+        window.checkNext = function() {
+            $body.removeChild($iframe);
+            if(i === allPages.length - 1) {
+                $total.innerText = '已完成';
+                return;
+            }
+            self(++i);
+        };
+
+        $iframe.src = allPages[i];
+        $iframe.style = 'width: 0; height: 0; border: 0 none;'
+        $body.appendChild($iframe);
+
+    })(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>清除cookie进行时</title>
+</head>
+<body>
+<script>
+    (function() {
+        // 清理逻辑是二级域和根域 X  所有pathname组合
+        // 如 mp.52shangchao.com/xinghua/m/boutique/home/index
+        // 则需要清除下面的所有的wx_uid && wx_token
+        // .52shangchao.com X ['/', '/xinghua', '/xinghua/m', '/xinghua/m/boutique', '/xinghua/m/boutique/home', '/xinghua/m/boutique/home/index']
+        // mp.52shangchao.com X ['/', '/xinghua', '/xinghua/m', '/xinghua/m/boutique', '/xinghua/m/boutique/home', '/xinghua/m/boutique/home/index']
+        var delCookie = function (name, domain, path) {
+                    if (getCookie(name) !== null) {
+                        document.cookie = name + '=' +
+                                ((path) ? '; path=' + path : '') +
+                                ((domain) ? '; domain=' + domain : '') +
+                                ";expires=Thu, 01-Jan-1970 00:00:01 GMT";
+                    }
+                    return this;
+                },
+                getCookie = function (name) {
+                    var carr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+                    if (carr != null) {
+                        return unescape(carr[2]);
+                    }
+                    return null;
+                },
+                domains = (function() {
+                    var ret = [],
+                            arrs = window.location.hostname.split('.');
+
+                    for(var i = 2; i <= arrs.length; i++) {
+                        var tmpArr = arrs.slice(arrs.length - i, arrs.length);
+                        ret.push(tmpArr.join('.'));
+                    }
+
+                    return ret;
+
+                })(),
+                pathnames = (function() {
+                    var ret = ['/'],
+                            arrs = window.location.pathname.split('/');
+
+                    for(var i = 2; i <= arrs.length; i++) {
+                        var tmpArr = arrs.slice(0, i);
+                        ret.push(tmpArr.join('/'));
+                    }
+
+                    return ret;
+                })(),
+                allCookieNames = (function() {
+                    var ret = [];
+                    var cookies = document.cookie.split(";");
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i];
+                        var eqPos = cookie.indexOf("=");
+                        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                        ret.push(name.trim());
+                    }
+                    return ret;
+                })();
+
+        for(var i = 0; i < domains.length; i++) {
+            for(var j = 0; j < pathnames.length; j++) {
+                for(var k = 0; k < allCookieNames.length; k++) {
+                    console.log('clear cookie "' + allCookieNames[k] + '" "' + domains[i] + '" "' + pathnames[j] + '"');
+                    delCookie(allCookieNames[k], domains[i], pathnames[j])
+                    // del domain=52shangchao.com
+                    // http://stackoverflow.com/questions/5688491/unable-to-delete-cookie-from-javascript
+                    delCookie(allCookieNames[k], null, pathnames[j])
+                }
+            }
+        }
+
+        // 让parent调用下一个url
+        top && top.checkNext && top.checkNext();
+
+    })();
+</script>
+</body>
+</html>
