@@ -51,6 +51,12 @@
     var urlParams = getUrlParams(),
         jumpUri = urlParams['jumpUri'];
 
+    // fix bug
+    if(window.history && window.history.pushState) {
+
+        window.history.pushState({}, '加载中', window.location.href);
+    }
+
     window.location.href = jumpUri;
 </script>
 </body>
