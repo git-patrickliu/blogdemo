@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>second</title>
+</head>
+<body>
+<div>我是第二页</div>
+<div>history length is <span id="historyLength"></span></div>
+<a href="javascript:;" id="gotoPage3">前往第三页</a>
+<script src="./history.js"></script>
+<script>
+    document.querySelector('#gotoPage3').addEventListener('click', function() {
+        backURL('index1.html?backURL=' + encodeURIComponent('homepage.html?canotGoBack=true'));
+        window.location.href = 'index3.html';
+    }, false);
+
+    document.querySelector('#historyLength').innerText = window.history.length;
+</script>
+</body>
+</html>

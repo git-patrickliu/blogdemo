@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>first</title>
+</head>
+<body>
+<div>我是第一页</div>
+<div>history length is <span id="historyLength"></span></div>
+<a href="./index2.html">前往第二页</a>
+<script src="./history.js"></script>
+<script>
+    document.querySelector('#historyLength').innerText = window.history.length;
+</script>
+</body>
+</html>

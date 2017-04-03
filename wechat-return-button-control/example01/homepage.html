@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>homepage</title>
+</head>
+<body>
+我是首页
+<a href="./index1.html">前往第一页</a>
+<script src="./history.js"></script>
+<script>
+    var urlParams = getUrlParams();
+    if(urlParams['canotGoBack']) {
+        backURL('urlProxy.html?jumpUri=homepage.html');
+    }
+</script>
+</body>
+</html>
